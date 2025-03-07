@@ -1,19 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:padding="16dp"
+    android:orientation="vertical"
+    tools:context="br.edu.utfpr.consultacep.MainActivity">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/digite_o_cep"
+        android:layout_marginTop="10dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editCep"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeActionLabel="@string/buscar"
+            android:inputType="number"
+            android:imeOptions="actionDone" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:gravity="center">
+        <Button
+            android:id="@+id/btnBuscar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/buscar"
+            android:enabled="false"
+            android:layout_weight="1" />
+
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:layout_weight="1" />
+    </LinearLayout>
 
     <TextView
+        android:id="@+id/txtCep"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginTop="10dp"
+        tools:text="@string/cep" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/txtLogradouro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="@string/logradouro" />
+
+    <TextView
+        android:id="@+id/txtBairro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="@string/bairro" />
+
+    <TextView
+        android:id="@+id/txtLocalidade"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="@string/localidade" />
+
+    <TextView
+        android:id="@+id/txtUf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="@string/uf" />
+</LinearLayout>
