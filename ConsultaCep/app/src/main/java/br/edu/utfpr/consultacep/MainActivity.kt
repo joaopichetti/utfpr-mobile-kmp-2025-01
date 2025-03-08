@@ -3,12 +3,14 @@ package br.edu.utfpr.consultacep
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import br.edu.utfpr.consultacep.databinding.ActivityMainBinding
+import br.edu.utfpr.consultacep.shared.Greeting
 import br.edu.utfpr.consultacep.ui.CepViewModel
 import br.edu.utfpr.consultacep.ui.CepViewModelFactory
 
@@ -18,6 +20,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Log.d("MainActivity", "Hello from shared module: ${Greeting().greet()}")
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)

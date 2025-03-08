@@ -21,3 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "ConsultaCep"
 include(":app")
+include(":shared")

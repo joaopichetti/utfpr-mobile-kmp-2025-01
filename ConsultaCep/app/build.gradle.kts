@@ -50,6 +50,7 @@ dependencies {
     implementation(libs.androidx.databinding.runtime)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
+    implementation(project(":shared"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
