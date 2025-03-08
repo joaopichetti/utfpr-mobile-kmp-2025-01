@@ -5,8 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import br.edu.utfpr.consultacep.data.repository.CepRepository
-import br.edu.utfpr.consultacep.data.validator.CepValidator
+import br.edu.utfpr.consultacep.shared.data.repository.CepRepository
+import br.edu.utfpr.consultacep.shared.data.validator.CepValidator
 import kotlinx.coroutines.launch
 
 class CepViewModel(

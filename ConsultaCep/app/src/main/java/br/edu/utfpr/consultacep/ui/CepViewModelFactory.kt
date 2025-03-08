@@ -2,8 +2,8 @@ package br.edu.utfpr.consultacep.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import br.edu.utfpr.consultacep.data.repository.CepRepository
-import br.edu.utfpr.consultacep.data.validator.CepValidator
+import br.edu.utfpr.consultacep.shared.data.repository.CepRepository
+import br.edu.utfpr.consultacep.shared.data.validator.CepValidator
 
 class CepViewModelFactory : ViewModelProvider.Factory {
 
