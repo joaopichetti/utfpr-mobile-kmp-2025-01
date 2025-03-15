@@ -31,21 +31,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import br.edu.utfpr.cadastropessoas.data.model.Pessoa
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListaPessoasScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: ListaPessoasViewModel = viewModel()
 ) {
-    val carregando = false
-    val ocorreuErro = false
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
             ListaPessoasTopBar(
-                mostrarAcaoAtualizar = true,
-                onAtualizar = {}
+                mostrarAcaoAtualizar = viewModel.uiState.sucesso,
+                onAtualizar = viewModel::carregarPessoas
             )
         },
         floatingActionButton = {
@@ -54,17 +54,17 @@ fun ListaPessoasScreen(
             }
         }
     ) { innerPadding ->
-        if (carregando) {
+        if (viewModel.uiState.carregando) {
             CarregandoPessoas(modifier = Modifier.padding(innerPadding))
-        } else if (ocorreuErro) {
+        } else if (viewModel.uiState.ocorreuErro) {
             ErroCarregarPessoas(
                 modifier = Modifier.padding(innerPadding),
-                onTentarNovamente = {}
+                onTentarNovamente = viewModel::carregarPessoas
             )
         } else {
             ListaPessoas(
                 modifier = Modifier.padding(innerPadding),
-                pessoas = listOf(),
+                pessoas = viewModel.uiState.pessoas,
                 onPessoaSelecionada = {}
             )
         }
