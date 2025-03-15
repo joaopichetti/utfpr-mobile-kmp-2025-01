@@ -30,6 +30,9 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import br.edu.utfpr.cadastropessoas.ui.composables.AppBarPadrao
 import br.edu.utfpr.cadastropessoas.ui.composables.Carregando
 import br.edu.utfpr.cadastropessoas.ui.composables.ErroCarregar
@@ -37,44 +40,50 @@ import br.edu.utfpr.cadastropessoas.ui.composables.ErroCarregar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FormPessoaScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    idPessoa: Int,
 ) {
-    val carregando = false
-    val ocorreuErroAoCarregar = false
+    val viewModel: FormPessoaViewModel = viewModel(
+        factory = viewModelFactory {
+            initializer {
+                FormPessoaViewModel(idPessoa = idPessoa)
+            }
+        }
+    )
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
             FormPessoaTopBar(
-                mostrarAcoes = true,
-                salvando = false,
-                novaPessoa = true,
-                onSalvar = {},
+                mostrarAcoes = viewModel.uiState.sucessoAoCarregar,
+                salvando = viewModel.uiState.salvando,
+                novaPessoa = viewModel.uiState.novaPessoa,
+                onSalvar = viewModel::salvar,
                 onVoltar = {}
             )
         }
     ) { innerPadding ->
-        if (carregando) {
+        if (viewModel.uiState.carregando) {
             Carregando(
                 modifier = Modifier.padding(innerPadding),
                 texto = "Carregando pessoa..."
             )
-        } else if (ocorreuErroAoCarregar) {
+        } else if (viewModel.uiState.ocorreuErroAoCarregar) {
             ErroCarregar(
                 modifier = Modifier.padding(innerPadding),
                 texto = "Não foi possível carregar a pessoa",
-                onTentarNovamente = {}
+                onTentarNovamente = viewModel::carregarPessoa
             )
         } else {
             Formulario(
                 modifier = Modifier.padding(innerPadding),
-                idPessoa = 0,
-                formState = FormState(),
-                onNomeAlterado = {},
-                onCpfAlterado = {},
-                onTelefoneAlterado = {},
-                onCepAlterado = {},
-                onNumeroAlterado = {},
-                onComplementoAlterado = {}
+                idPessoa = viewModel.uiState.idPessoa,
+                formState = viewModel.uiState.formState,
+                onNomeAlterado = viewModel::onNomeAlterado,
+                onCpfAlterado = viewModel::onCpfAlterado,
+                onTelefoneAlterado = viewModel::onTelefoneAlterado,
+                onCepAlterado = viewModel::onCepAlterado,
+                onNumeroAlterado = viewModel::onNumeroAlterado,
+                onComplementoAlterado = viewModel::onComplementoAlterado
             )
         }
     }
