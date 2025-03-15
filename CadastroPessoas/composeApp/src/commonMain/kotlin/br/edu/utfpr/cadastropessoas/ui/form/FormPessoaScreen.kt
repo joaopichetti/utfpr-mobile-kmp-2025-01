@@ -68,6 +68,7 @@ fun FormPessoaScreen(
             Formulario(
                 modifier = Modifier.padding(innerPadding),
                 idPessoa = 0,
+                formState = FormState(),
                 onNomeAlterado = {},
                 onCpfAlterado = {},
                 onTelefoneAlterado = {},
@@ -129,6 +130,7 @@ fun FormPessoaTopBar(
 fun Formulario(
     modifier: Modifier = Modifier,
     idPessoa: Int,
+    formState: FormState,
     onNomeAlterado: (String) -> Unit,
     onCpfAlterado: (String) -> Unit,
     onTelefoneAlterado: (String) -> Unit,
@@ -145,61 +147,61 @@ fun Formulario(
        IdPessoa(idPessoa = idPessoa)
        FormTextField(
            label = "Nome",
-           value = "",
+           value = formState.nome.value,
            onValueChanged = onNomeAlterado,
-           errorMessage = "",
+           errorMessage = formState.nome.errorMessage,
            keyboardCapitalization = KeyboardCapitalization.Words
        )
        FormTextField(
            label = "CPF",
-           value = "",
+           value = formState.cpf.value,
            onValueChanged = onCpfAlterado,
-           errorMessage = "",
+           errorMessage = formState.cpf.errorMessage,
            keyboardType = KeyboardType.Number
        )
        FormTextField(
            label = "Telefone",
-           value = "",
+           value = formState.telefone.value,
            onValueChanged = onTelefoneAlterado,
-           errorMessage = "",
+           errorMessage = formState.telefone.errorMessage,
            keyboardType = KeyboardType.Phone
        )
        Divider(modifier = Modifier.padding(vertical = 16.dp))
        FormTitle(text = "Endereço")
        FormTextField(
            label = "CEP",
-           value = "",
+           value = formState.cep.value,
            onValueChanged = onCepAlterado,
-           errorMessage = "",
+           errorMessage = formState.cep.errorMessage,
            keyboardType = KeyboardType.Number
        )
        FormTextField(
            label = "Logradouro",
-           value = "",
+           value = formState.logradouro.value,
            enabled = false,
            onValueChanged = {}
        )
        FormTextField(
            label = "Número",
-           value = "",
+           value = formState.numero.value,
            onValueChanged = onNumeroAlterado,
-           errorMessage = "",
+           errorMessage = formState.numero.errorMessage,
            keyboardType = KeyboardType.Number
        )
        FormTextField(
            label = "Complemento",
-           value = "",
+           value = formState.complemento.value,
            onValueChanged = onComplementoAlterado
        )
        FormTextField(
            label = "Bairro",
-           value = "",
+           value = formState.bairro.value,
            enabled = false,
            onValueChanged = {}
        )
        FormTextField(
            label = "Cidade",
-           value = "",
+           value = formState.cidade.value,
            enabled = false,
            onValueChanged = {},
            keyboardImeAction = ImeAction.Done

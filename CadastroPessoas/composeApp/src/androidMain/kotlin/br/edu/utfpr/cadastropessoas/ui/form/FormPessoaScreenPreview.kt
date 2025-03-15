@@ -39,6 +39,33 @@ private fun FormPessoaNovaFormularioPreview() {
     MaterialTheme {
         Formulario(
             idPessoa = 0,
+            formState = FormState(),
+            onNomeAlterado = {},
+            onCpfAlterado = {},
+            onTelefoneAlterado = {},
+            onCepAlterado = {},
+            onNumeroAlterado = {},
+            onComplementoAlterado = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun FormPessoaExistenteFormularioPreview() {
+    MaterialTheme {
+        Formulario(
+            idPessoa = 0,
+            formState = FormState(
+                nome = FormField(value = "João"),
+                cpf = FormField(
+                    errorMessage = "CPF obrigatório"
+                ),
+                telefone = FormField(
+                    value = "(99) 9999-99",
+                    errorMessage = "Telefone inválido"
+                )
+            ),
             onNomeAlterado = {},
             onCpfAlterado = {},
             onTelefoneAlterado = {},
