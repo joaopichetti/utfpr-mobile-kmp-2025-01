@@ -19,24 +19,6 @@ private fun ListaPessoasTopBarPreview() {
 
 @Preview(showBackground = true, heightDp = 400)
 @Composable
-private fun CarregandoPessoasPreview() {
-    MaterialTheme {
-        CarregandoPessoas()
-    }
-}
-
-@Preview(showBackground = true, heightDp = 400)
-@Composable
-private fun ErroCarregarPessoasPreview() {
-    MaterialTheme {
-        ErroCarregarPessoas(
-            onTentarNovamente = {}
-        )
-    }
-}
-
-@Preview(showBackground = true, heightDp = 400)
-@Composable
 private fun ListaPessoasVaziaPreview() {
     MaterialTheme {
         ListaPessoas(

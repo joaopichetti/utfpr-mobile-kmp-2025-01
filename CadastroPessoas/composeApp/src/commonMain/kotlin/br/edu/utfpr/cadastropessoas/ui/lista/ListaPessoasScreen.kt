@@ -4,35 +4,31 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import br.edu.utfpr.cadastropessoas.data.model.Pessoa
+import br.edu.utfpr.cadastropessoas.ui.composables.AppBarPadrao
+import br.edu.utfpr.cadastropessoas.ui.composables.Carregando
+import br.edu.utfpr.cadastropessoas.ui.composables.ErroCarregar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -55,10 +51,14 @@ fun ListaPessoasScreen(
         }
     ) { innerPadding ->
         if (viewModel.uiState.carregando) {
-            CarregandoPessoas(modifier = Modifier.padding(innerPadding))
-        } else if (viewModel.uiState.ocorreuErro) {
-            ErroCarregarPessoas(
+            Carregando(
                 modifier = Modifier.padding(innerPadding),
+                texto = "Carregando Pessoas..."
+            )
+        } else if (viewModel.uiState.ocorreuErro) {
+            ErroCarregar(
+                modifier = Modifier.padding(innerPadding),
+                texto = "Não foi possível carregar as pessoas",
                 onTentarNovamente = viewModel::carregarPessoas
             )
         } else {
@@ -71,20 +71,15 @@ fun ListaPessoasScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListaPessoasTopBar(
     modifier: Modifier = Modifier,
     mostrarAcaoAtualizar: Boolean,
     onAtualizar: () -> Unit
 ) {
-    TopAppBar(
-        modifier = modifier.fillMaxWidth(),
-        colors = TopAppBarDefaults.mediumTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            titleContentColor = MaterialTheme.colorScheme.primary
-        ),
-        title = { Text("Pessoas") },
+    AppBarPadrao(
+        modifier = modifier,
+        titulo = "Pessoas",
         actions = {
             if (mostrarAcaoAtualizar) {
                 IconButton(onClick = onAtualizar) {
@@ -96,63 +91,6 @@ fun ListaPessoasTopBar(
             }
         }
     )
-}
-
-@Composable
-fun CarregandoPessoas(modifier: Modifier = Modifier) {
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.fillMaxSize()
-    ) {
-        CircularProgressIndicator(
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.size(60.dp)
-        )
-        Text(
-            modifier = Modifier.padding(top = 8.dp),
-            text = "Carregando Pessoas...",
-            style = MaterialTheme.typography.titleLarge,
-            color = MaterialTheme.colorScheme.primary
-        )
-    }
-}
-
-@Composable
-fun ErroCarregarPessoas(
-    modifier: Modifier = Modifier,
-    onTentarNovamente: () -> Unit
-) {
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.fillMaxSize()
-    ) {
-        Icon(
-            imageVector = Icons.Filled.Close,
-            contentDescription = "Erro ao carregar",
-            tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.size(80.dp)
-        )
-        Text(
-            modifier = Modifier.padding(top = 8.dp, start = 8.dp, end = 8.dp),
-            text = "Não foi possível carregar as pessoas",
-            style = MaterialTheme.typography.titleLarge,
-            color = MaterialTheme.colorScheme.primary
-        )
-        Text(
-            modifier = Modifier.padding(top = 8.dp, start = 8.dp, end = 8.dp),
-            text = "Aguarde um momento e tente novamente",
-            style = MaterialTheme.typography.titleSmall,
-            color = MaterialTheme.colorScheme.primary
-        )
-        ElevatedButton(
-            onClick = onTentarNovamente,
-            modifier = Modifier.padding(top = 16.dp)
-        ) {
-            Text(text = "Tentar novamente")
-        }
-    }
 }
 
 @Composable
