@@ -36,6 +36,9 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import br.edu.utfpr.cadastropessoas.ui.composables.AppBarPadrao
 import br.edu.utfpr.cadastropessoas.ui.composables.Carregando
 import br.edu.utfpr.cadastropessoas.ui.composables.ErroCarregar
+import br.edu.utfpr.cadastropessoas.ui.form.visualtransformation.CepVisualTransformation
+import br.edu.utfpr.cadastropessoas.ui.form.visualtransformation.CpfVisualTransformation
+import br.edu.utfpr.cadastropessoas.ui.form.visualtransformation.TelefoneVisualTransformation
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -166,14 +169,16 @@ fun Formulario(
            value = formState.cpf.value,
            onValueChanged = onCpfAlterado,
            errorMessage = formState.cpf.errorMessage,
-           keyboardType = KeyboardType.Number
+           keyboardType = KeyboardType.Number,
+           visualTransformation = CpfVisualTransformation()
        )
        FormTextField(
            label = "Telefone",
            value = formState.telefone.value,
            onValueChanged = onTelefoneAlterado,
            errorMessage = formState.telefone.errorMessage,
-           keyboardType = KeyboardType.Phone
+           keyboardType = KeyboardType.Phone,
+           visualTransformation = TelefoneVisualTransformation()
        )
        Divider(modifier = Modifier.padding(vertical = 16.dp))
        FormTitle(text = "Endereço")
@@ -182,7 +187,8 @@ fun Formulario(
            value = formState.cep.value,
            onValueChanged = onCepAlterado,
            errorMessage = formState.cep.errorMessage,
-           keyboardType = KeyboardType.Number
+           keyboardType = KeyboardType.Number,
+           visualTransformation = CepVisualTransformation()
        )
        FormTextField(
            label = "Logradouro",
