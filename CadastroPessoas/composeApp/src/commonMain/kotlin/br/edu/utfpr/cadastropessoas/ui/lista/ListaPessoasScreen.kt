@@ -35,7 +35,8 @@ import br.edu.utfpr.cadastropessoas.ui.composables.ErroCarregar
 fun ListaPessoasScreen(
     modifier: Modifier = Modifier,
     viewModel: ListaPessoasViewModel = viewModel(),
-    onAdicionarPessoa: () -> Unit
+    onAdicionarPessoa: () -> Unit,
+    onPessoaSelecionada: (Pessoa) -> Unit
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -66,7 +67,7 @@ fun ListaPessoasScreen(
             ListaPessoas(
                 modifier = Modifier.padding(innerPadding),
                 pessoas = viewModel.uiState.pessoas,
-                onPessoaSelecionada = {}
+                onPessoaSelecionada = onPessoaSelecionada
             )
         }
     }

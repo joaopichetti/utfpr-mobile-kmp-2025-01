@@ -6,6 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -53,6 +54,9 @@ fun App(
                     viewModel = viewModel,
                     onAdicionarPessoa = {
                         navController.navigate("form")
+                    },
+                    onPessoaSelecionada = { pessoa ->
+                        navController.navigate("form?id=${pessoa.id}")
                     }
                 )
             }
@@ -80,7 +84,11 @@ fun App(
                 FormPessoaScreen(
                     viewModel = viewModel,
                     pessoaSalvaComSucesso = {
-                        navController.popBackStack()
+                        navController.navigate("list") {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                inclusive = true
+                            }
+                        }
                     },
                     onVoltar = {
                         navController.popBackStack()
