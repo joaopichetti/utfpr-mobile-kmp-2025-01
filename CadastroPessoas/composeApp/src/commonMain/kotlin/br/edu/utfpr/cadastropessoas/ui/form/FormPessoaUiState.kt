@@ -37,6 +37,6 @@ data class FormPessoaUiState(
     val ocorreuErroAoSalvar: Boolean = false,
     val salvoComSucesso: Boolean = false
 ) {
-    val novaPessoa get(): Boolean = idPessoa < 0
+    val novaPessoa get(): Boolean = idPessoa <= 0
     val sucessoAoCarregar get(): Boolean = !carregando && !ocorreuErroAoCarregar
 }
