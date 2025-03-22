@@ -188,7 +188,18 @@ fun Formulario(
            onValueChanged = onCepAlterado,
            errorMessage = formState.cep.errorMessage,
            keyboardType = KeyboardType.Number,
-           visualTransformation = CepVisualTransformation()
+           visualTransformation = CepVisualTransformation(),
+           enabled = !formState.buscandoCep,
+           trailingIcon = {
+               if (formState.buscandoCep) {
+                   CircularProgressIndicator(
+                       modifier = Modifier
+                           .size(60.dp)
+                           .padding(16.dp),
+                       strokeWidth = 2.dp
+                   )
+               }
+           }
        )
        FormTextField(
            label = "Logradouro",

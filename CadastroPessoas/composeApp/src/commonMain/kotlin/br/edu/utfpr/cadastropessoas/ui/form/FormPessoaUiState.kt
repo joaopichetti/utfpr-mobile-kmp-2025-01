@@ -14,7 +14,8 @@ data class FormState(
     val numero: FormField = FormField(),
     val complemento: FormField = FormField(),
     val bairro: FormField = FormField(),
-    val cidade: FormField = FormField()
+    val cidade: FormField = FormField(),
+    val buscandoCep: Boolean = false
 ) {
     val isValid get(): Boolean = nome.errorMessage == null &&
             cpf.errorMessage == null &&

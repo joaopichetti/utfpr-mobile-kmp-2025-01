@@ -5,8 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import br.edu.utfpr.cadastropessoas.data.model.Cep
 import br.edu.utfpr.cadastropessoas.data.model.Endereco
 import br.edu.utfpr.cadastropessoas.data.model.Pessoa
+import br.edu.utfpr.cadastropessoas.data.repository.CepRepository
 import br.edu.utfpr.cadastropessoas.data.repository.PessoaRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -17,6 +19,7 @@ class FormPessoaViewModel(
 ) : ViewModel() {
     private val tag: String = "FormPessoaViewModel"
     private val pessoaRepository: PessoaRepository = PessoaRepository()
+    private val cepRepository: CepRepository = CepRepository()
 
     var uiState: FormPessoaUiState by mutableStateOf(FormPessoaUiState(idPessoa = idPessoa))
         private set
@@ -155,14 +158,20 @@ class FormPessoaViewModel(
     fun onCepAlterado(valor: String) {
         val novoCep = valor.replace("\\D".toRegex(), "")
         if (novoCep.length <= 8 && uiState.formState.cep.value != novoCep) {
-            uiState = uiState.copy(
-                formState = uiState.formState.copy(
-                    cep = FormField(
-                        value = novoCep,
-                        errorMessage = validarCep(novoCep)
+            val mensagemValidacao = validarCep(novoCep)
+            val podeBuscar = mensagemValidacao == null && novoCep.length == 8
+            if (podeBuscar) {
+                buscarCep(novoCep)
+            } else {
+                uiState = uiState.copy(
+                    formState = uiState.formState.copy(
+                        cep = FormField(
+                            value = novoCep,
+                            errorMessage = mensagemValidacao
+                        )
                     )
                 )
-            )
+            }
         }
     }
 
@@ -249,5 +258,52 @@ class FormPessoaViewModel(
             )
         )
         return uiState.formState.isValid
+    }
+
+    private fun buscarCep(cep: String) {
+        if (uiState.formState.buscandoCep) return
+
+        uiState = uiState.copy(
+            formState = uiState.formState.copy(
+                buscandoCep = true,
+                cep = FormField(
+                    value = cep,
+                    errorMessage = null
+                ),
+                logradouro = FormField(""),
+                bairro = FormField(""),
+                cidade = FormField("")
+            )
+        )
+        viewModelScope.launch {
+            delay(1500)
+            uiState = try {
+                val hasError = Random.nextBoolean()
+                if (hasError) {
+                    throw Exception("Erro gerado para teste")
+                }
+                val cepRetornado: Cep = cepRepository.buscarCep(cep)
+                uiState.copy(
+                    formState = uiState.formState.copy(
+                        logradouro = FormField(cepRetornado.logradouro),
+                        bairro = FormField(cepRetornado.bairro),
+                        cidade = FormField(cepRetornado.cidadeUf),
+                        buscandoCep = false
+                    )
+                )
+            } catch (ex: Exception) {
+                println("[$tag]: Erro ao consultar o CEP $cep")
+                ex.printStackTrace()
+                uiState.copy(
+                    formState = uiState.formState.copy(
+                        buscandoCep = false,
+                        cep = uiState.formState.cep.copy(
+                            errorMessage = "Não foi possível consultar o CEP." +
+                                    " Aguarde um momento e tente novamente."
+                        )
+                    )
+                )
+            }
+        }
     }
 }
