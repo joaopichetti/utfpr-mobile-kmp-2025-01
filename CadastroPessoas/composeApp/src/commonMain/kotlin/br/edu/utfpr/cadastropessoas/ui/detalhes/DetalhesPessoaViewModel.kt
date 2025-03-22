@@ -3,6 +3,7 @@ package br.edu.utfpr.cadastropessoas.ui.detalhes
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.edu.utfpr.cadastropessoas.data.repository.PessoaRepository
@@ -10,10 +11,11 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class DetalhesPessoaViewModel(
-    private val idPessoa: Int,
-    private val pessoaRepository: PessoaRepository
+    private val pessoaRepository: PessoaRepository,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val tag: String = "DetalhesPessoaViewModel"
+    private val idPessoa: Int = savedStateHandle.get<Int>("id") ?: 0
 
     var uiState: DetalhesPessoaUiState by mutableStateOf(DetalhesPessoaUiState())
         private set

@@ -3,6 +3,7 @@ package br.edu.utfpr.cadastropessoas.ui.form
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.edu.utfpr.cadastropessoas.data.model.Cep
@@ -14,11 +15,12 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class FormPessoaViewModel(
-    private val idPessoa: Int,
     private val pessoaRepository: PessoaRepository,
-    private val cepRepository: CepRepository
+    private val cepRepository: CepRepository,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val tag: String = "FormPessoaViewModel"
+    private val idPessoa: Int = savedStateHandle.get<String>("id")?.toIntOrNull() ?: 0
 
     var uiState: FormPessoaUiState by mutableStateOf(FormPessoaUiState(idPessoa = idPessoa))
         private set

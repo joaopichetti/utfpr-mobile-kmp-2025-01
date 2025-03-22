@@ -24,17 +24,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import br.edu.utfpr.cadastropessoas.data.model.Pessoa
 import br.edu.utfpr.cadastropessoas.ui.composables.AppBarPadrao
 import br.edu.utfpr.cadastropessoas.ui.composables.Carregando
 import br.edu.utfpr.cadastropessoas.ui.composables.ErroCarregar
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListaPessoasScreen(
     modifier: Modifier = Modifier,
-    viewModel: ListaPessoasViewModel = viewModel(),
+    viewModel: ListaPessoasViewModel = koinViewModel<ListaPessoasViewModel>(),
     onAdicionarPessoa: () -> Unit,
     onPessoaSelecionada: (Pessoa) -> Unit
 ) {

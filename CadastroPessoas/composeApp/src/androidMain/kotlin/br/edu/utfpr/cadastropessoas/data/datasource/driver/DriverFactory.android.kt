@@ -4,9 +4,11 @@ import android.content.Context
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import br.edu.utfpr.cadastropessoas.data.datasource.AppDatabase
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.scope.Scope
 
-actual class DriverFactory(private val context: Context) {
-    actual fun createDriver(): SqlDriver {
+class AndroidDriverFactory(private val context: Context) : DriverFactory {
+    override fun createDriver(): SqlDriver {
         return AndroidSqliteDriver(
             AppDatabase.Schema,
             context,
@@ -14,3 +16,6 @@ actual class DriverFactory(private val context: Context) {
         )
     }
 }
+
+actual fun getDriverFactory(scope: Scope): DriverFactory =
+    AndroidDriverFactory(scope.androidContext())

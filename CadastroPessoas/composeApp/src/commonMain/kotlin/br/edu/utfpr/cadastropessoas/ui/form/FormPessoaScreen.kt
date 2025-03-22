@@ -34,13 +34,13 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import br.edu.utfpr.cadastropessoas.ui.composables.AppBarPadrao
 import br.edu.utfpr.cadastropessoas.ui.composables.Carregando
 import br.edu.utfpr.cadastropessoas.ui.composables.ErroCarregar
 import br.edu.utfpr.cadastropessoas.ui.form.visualtransformation.CepVisualTransformation
 import br.edu.utfpr.cadastropessoas.ui.form.visualtransformation.CpfVisualTransformation
 import br.edu.utfpr.cadastropessoas.ui.form.visualtransformation.TelefoneVisualTransformation
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,7 +49,7 @@ fun FormPessoaScreen(
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     pessoaSalvaComSucesso: () -> Unit,
     onVoltar: () -> Unit,
-    viewModel: FormPessoaViewModel = viewModel()
+    viewModel: FormPessoaViewModel = koinViewModel<FormPessoaViewModel>()
 ) {
     LaunchedEffect(viewModel.uiState.salvoComSucesso) {
         if (viewModel.uiState.salvoComSucesso) {
