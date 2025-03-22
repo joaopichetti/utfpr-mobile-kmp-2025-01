@@ -10,9 +10,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
-class ListaPessoasViewModel : ViewModel() {
+class ListaPessoasViewModel(
+    private val pessoaRepository: PessoaRepository
+) : ViewModel() {
     private val tag: String = "ListaPessoasViewModel"
-    private val pessoaRepository: PessoaRepository = PessoaRepository()
 
     var uiState: ListaPessoasUiState by mutableStateOf(ListaPessoasUiState())
         private set

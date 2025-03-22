@@ -35,8 +35,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import br.edu.utfpr.cadastropessoas.ui.composables.AppBarPadrao
 import br.edu.utfpr.cadastropessoas.ui.composables.Carregando
 import br.edu.utfpr.cadastropessoas.ui.composables.ErroCarregar
@@ -48,18 +46,11 @@ import br.edu.utfpr.cadastropessoas.ui.form.visualtransformation.TelefoneVisualT
 @Composable
 fun FormPessoaScreen(
     modifier: Modifier = Modifier,
-    idPessoa: Int,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     pessoaSalvaComSucesso: () -> Unit,
-    onVoltar: () -> Unit
+    onVoltar: () -> Unit,
+    viewModel: FormPessoaViewModel = viewModel()
 ) {
-    val viewModel: FormPessoaViewModel = viewModel(
-        factory = viewModelFactory {
-            initializer {
-                FormPessoaViewModel(idPessoa = idPessoa)
-            }
-        }
-    )
     LaunchedEffect(viewModel.uiState.salvoComSucesso) {
         if (viewModel.uiState.salvoComSucesso) {
             pessoaSalvaComSucesso()

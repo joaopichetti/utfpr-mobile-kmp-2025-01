@@ -1,0 +1,33 @@
+CREATE TABLE pessoa(
+    id INTEGER PRIMARY KEY NOT NULL,
+    nome TEXT NOT NULL,
+    cpf TEXT NOT NULL,
+    telefone TEXT NOT NULL,
+    cep TEXT NOT NULL,
+    logradouro TEXT NOT NULL,
+    numero INTEGER NOT NULL,
+    complemento TEXT,
+    bairro TEXT NOT NULL,
+    cidade TEXT NOT NULL
+);
+
+carregarPessoas:
+SELECT *
+FROM pessoa;
+
+carregarPessoa:
+SELECT *
+FROM pessoa
+WHERE id = ?;
+
+adicionar:
+INSERT INTO pessoa (nome, cpf, telefone, cep, logradouro, numero, complemento, bairro, cidade)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+atualizar:
+UPDATE pessoa SET nome = ?, cpf = ?, telefone = ?, cep = ?, logradouro = ?, numero = ?,
+    complemento = ?, bairro = ?, cidade = ?
+WHERE id = ?;
+
+remover:
+DELETE FROM pessoa WHERE id = ?;

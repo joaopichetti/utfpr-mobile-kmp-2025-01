@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.sqldelight)
 }
 
 kotlin {
@@ -35,6 +36,7 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.client.okhttp)
             implementation(libs.kotlinx.coroutines.android)
+            implementation(libs.sqldelight.android.driver)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -52,9 +54,11 @@ kotlin {
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.androidx.navigation.compose)
+            implementation(libs.sqldelight.runtime)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
+            implementation(libs.sqldelight.native.driver)
         }
     }
 }
@@ -90,3 +94,10 @@ dependencies {
     debugImplementation(compose.uiTooling)
 }
 
+sqldelight {
+    databases {
+        create("AppDatabase") {
+            packageName.set("br.edu.utfpr.cadastropessoas.data.datasource")
+        }
+    }
+}

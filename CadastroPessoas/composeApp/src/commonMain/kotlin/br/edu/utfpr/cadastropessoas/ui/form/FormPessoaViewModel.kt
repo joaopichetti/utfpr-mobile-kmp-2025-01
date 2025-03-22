@@ -15,11 +15,11 @@ import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 class FormPessoaViewModel(
-    private val idPessoa: Int
+    private val idPessoa: Int,
+    private val pessoaRepository: PessoaRepository,
+    private val cepRepository: CepRepository
 ) : ViewModel() {
     private val tag: String = "FormPessoaViewModel"
-    private val pessoaRepository: PessoaRepository = PessoaRepository()
-    private val cepRepository: CepRepository = CepRepository()
 
     var uiState: FormPessoaUiState by mutableStateOf(FormPessoaUiState(idPessoa = idPessoa))
         private set
