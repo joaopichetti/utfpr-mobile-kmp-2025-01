@@ -49,7 +49,9 @@ import br.edu.utfpr.cadastropessoas.ui.form.visualtransformation.TelefoneVisualT
 fun FormPessoaScreen(
     modifier: Modifier = Modifier,
     idPessoa: Int,
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
+    pessoaSalvaComSucesso: () -> Unit,
+    onVoltar: () -> Unit
 ) {
     val viewModel: FormPessoaViewModel = viewModel(
         factory = viewModelFactory {
@@ -58,6 +60,11 @@ fun FormPessoaScreen(
             }
         }
     )
+    LaunchedEffect(viewModel.uiState.salvoComSucesso) {
+        if (viewModel.uiState.salvoComSucesso) {
+            pessoaSalvaComSucesso()
+        }
+    }
     LaunchedEffect(snackbarHostState, viewModel.uiState.ocorreuErroAoSalvar) {
         if (viewModel.uiState.ocorreuErroAoSalvar) {
             snackbarHostState.showSnackbar(
@@ -77,7 +84,7 @@ fun FormPessoaScreen(
                 salvando = viewModel.uiState.salvando,
                 novaPessoa = viewModel.uiState.novaPessoa,
                 onSalvar = viewModel::salvar,
-                onVoltar = {}
+                onVoltar = onVoltar
             )
         }
     ) { innerPadding ->

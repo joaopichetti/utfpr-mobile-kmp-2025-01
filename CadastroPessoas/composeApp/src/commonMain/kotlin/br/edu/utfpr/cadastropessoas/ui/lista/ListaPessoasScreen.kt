@@ -34,7 +34,8 @@ import br.edu.utfpr.cadastropessoas.ui.composables.ErroCarregar
 @Composable
 fun ListaPessoasScreen(
     modifier: Modifier = Modifier,
-    viewModel: ListaPessoasViewModel = viewModel()
+    viewModel: ListaPessoasViewModel = viewModel(),
+    onAdicionarPessoa: () -> Unit
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -45,7 +46,7 @@ fun ListaPessoasScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = {}) {
+            FloatingActionButton(onClick = onAdicionarPessoa) {
                 Icon(Icons.Default.Add, contentDescription = "Adicionar")
             }
         }
