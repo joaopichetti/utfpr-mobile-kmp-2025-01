@@ -11,6 +11,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.IconButton
 import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.SnackbarHost
+import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -22,6 +24,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontStyle
@@ -45,6 +49,7 @@ import br.edu.utfpr.cadastropessoas.ui.form.visualtransformation.TelefoneVisualT
 fun FormPessoaScreen(
     modifier: Modifier = Modifier,
     idPessoa: Int,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
 ) {
     val viewModel: FormPessoaViewModel = viewModel(
         factory = viewModelFactory {
@@ -53,8 +58,19 @@ fun FormPessoaScreen(
             }
         }
     )
+    LaunchedEffect(snackbarHostState, viewModel.uiState.ocorreuErroAoSalvar) {
+        if (viewModel.uiState.ocorreuErroAoSalvar) {
+            snackbarHostState.showSnackbar(
+                message = "Ocorreu um problema ao salvar a pessoa." +
+                        " Aguarde um momento e tente noamente."
+            )
+        }
+    }
     Scaffold(
         modifier = modifier.fillMaxSize(),
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        },
         topBar = {
             FormPessoaTopBar(
                 mostrarAcoes = viewModel.uiState.sucessoAoCarregar,
