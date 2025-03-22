@@ -17,6 +17,8 @@ import br.edu.utfpr.cadastropessoas.data.datasource.PessoaDatasource
 import br.edu.utfpr.cadastropessoas.data.datasource.driver.DriverFactory
 import br.edu.utfpr.cadastropessoas.data.repository.CepRepository
 import br.edu.utfpr.cadastropessoas.data.repository.PessoaRepository
+import br.edu.utfpr.cadastropessoas.ui.detalhes.DetalhesPessoaScreen
+import br.edu.utfpr.cadastropessoas.ui.detalhes.DetalhesPessoaViewModel
 import br.edu.utfpr.cadastropessoas.ui.form.FormPessoaScreen
 import br.edu.utfpr.cadastropessoas.ui.form.FormPessoaViewModel
 import br.edu.utfpr.cadastropessoas.ui.lista.ListaPessoasScreen
@@ -56,7 +58,7 @@ fun App(
                         navController.navigate("form")
                     },
                     onPessoaSelecionada = { pessoa ->
-                        navController.navigate("form?id=${pessoa.id}")
+                        navController.navigate("details/${pessoa.id}")
                     }
                 )
             }
@@ -84,17 +86,53 @@ fun App(
                 FormPessoaScreen(
                     viewModel = viewModel,
                     pessoaSalvaComSucesso = {
-                        navController.navigate("list") {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                inclusive = true
-                            }
-                        }
+                        navegarParaLista(navController)
                     },
                     onVoltar = {
                         navController.popBackStack()
                     }
                 )
             }
+            composable(
+                route = "details/{id}",
+                arguments = listOf(
+                    navArgument(name = "id") {
+                        type = NavType.IntType
+                    }
+                )
+            ) { navBackStackEntry ->
+                val idPessoa = navBackStackEntry.arguments?.getInt("id") ?: 0
+                val viewModel: DetalhesPessoaViewModel = viewModel(
+                    factory = viewModelFactory {
+                        initializer {
+                            DetalhesPessoaViewModel(
+                                idPessoa = idPessoa,
+                                pessoaRepository = pessoaRepository
+                            )
+                        }
+                    }
+                )
+                DetalhesPessoaScreen(
+                    viewModel = viewModel,
+                    onPessoaRemovida = {
+                        navegarParaLista(navController)
+                    },
+                    onVoltar = {
+                        navController.popBackStack()
+                    },
+                    onAlterar = {
+                        navController.navigate("form?id=$idPessoa")
+                    }
+                )
+            }
+        }
+    }
+}
+
+fun navegarParaLista(navController: NavHostController) {
+    navController.navigate("list") {
+        popUpTo(navController.graph.findStartDestination().id) {
+            inclusive = true
         }
     }
 }

@@ -1,0 +1,287 @@
+package br.edu.utfpr.cadastropessoas.ui.detalhes
+
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import br.edu.utfpr.cadastropessoas.data.model.Pessoa
+import br.edu.utfpr.cadastropessoas.ui.composables.AppBarPadrao
+import br.edu.utfpr.cadastropessoas.ui.composables.Carregando
+import br.edu.utfpr.cadastropessoas.ui.composables.ErroCarregar
+import br.edu.utfpr.cadastropessoas.utils.extensions.formatarCep
+import br.edu.utfpr.cadastropessoas.utils.extensions.formatarCpf
+import br.edu.utfpr.cadastropessoas.utils.extensions.formatarTelefone
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DetalhesPessoaScreen(
+    modifier: Modifier = Modifier,
+    viewModel: DetalhesPessoaViewModel = viewModel(),
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
+    onPessoaRemovida: () -> Unit,
+    onVoltar: () -> Unit,
+    onAlterar: () -> Unit
+) {
+    LaunchedEffect(viewModel.uiState.pessoaRemovida) {
+        if (viewModel.uiState.pessoaRemovida) {
+            onPessoaRemovida()
+        }
+    }
+
+    LaunchedEffect(snackbarHostState, viewModel.uiState.ocorreuErroAoRemover) {
+        if (viewModel.uiState.ocorreuErroAoRemover) {
+            snackbarHostState.showSnackbar(
+                message = "Não foi possível remover a pessoa." +
+                        " Aguarde um momento e tente novamente."
+            )
+        }
+    }
+
+    if (viewModel.uiState.mostrarDialogConfirmacao) {
+        DialogConfirmacao(
+            onCancelar = viewModel::ocultarDialogConfirmacao,
+            onConfirmar = viewModel::remover
+        )
+    }
+
+    Scaffold(
+        modifier = modifier.fillMaxSize(),
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        topBar = {
+            DetalhesPessoaTopBar(
+                removendo = viewModel.uiState.removendo,
+                mostrarAcoes = viewModel.uiState.sucessoAoCarregar,
+                onVoltar = onVoltar,
+                onAlterar = onAlterar,
+                onRemover = viewModel::mostrarDialogConfirmacao
+            )
+        }
+    ) { innerPadding ->
+        if (viewModel.uiState.carregando) {
+            Carregando(
+                modifier = Modifier.padding(innerPadding),
+                texto = "Carregando pessoa..."
+            )
+        } else if (viewModel.uiState.ocorreuErroAoCarregar) {
+            ErroCarregar(
+                modifier = Modifier.padding(innerPadding),
+                texto = "Não foi possível carregar a pessoa",
+                onTentarNovamente = viewModel::carregarPessoa
+            )
+        } else {
+            DetalhesPessoa(
+                modifier = Modifier.padding(innerPadding),
+                pessoa = viewModel.uiState.pessoa
+            )
+        }
+    }
+}
+
+@Composable
+fun DialogConfirmacao(
+    modifier: Modifier = Modifier,
+    onCancelar: () -> Unit,
+    onConfirmar: () -> Unit
+) {
+    AlertDialog(
+        modifier = modifier,
+        title = { Text("Atenção") },
+        text = {
+            Text("Ao confirmar, essa pessoa será removida e não poderá ser recuperada")
+        },
+        onDismissRequest = onCancelar,
+        confirmButton = {
+            TextButton(onClick = onConfirmar) {
+                Text("Confirmar")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onCancelar) {
+                Text("Cancelar")
+            }
+        }
+    )
+}
+
+@Composable
+fun DetalhesPessoaTopBar(
+    modifier: Modifier = Modifier,
+    mostrarAcoes: Boolean,
+    removendo: Boolean,
+    onVoltar: () -> Unit,
+    onRemover: () -> Unit,
+    onAlterar: () -> Unit
+) {
+    AppBarPadrao(
+        modifier = modifier.fillMaxWidth(),
+        titulo = "Detalhes da Pessoa",
+        navigationIcon = {
+            IconButton(onClick = onVoltar) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Voltar"
+                )
+            }
+        },
+        actions = {
+            if (mostrarAcoes) {
+                if (removendo) {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .size(60.dp)
+                            .padding(16.dp),
+                        strokeWidth = 2.dp
+                    )
+                } else {
+                    IconButton(onClick = onAlterar) {
+                        Icon(
+                            imageVector = Icons.Filled.Edit,
+                            contentDescription = "Alterar"
+                        )
+                    }
+                    IconButton(onClick = onRemover) {
+                        Icon(
+                            imageVector = Icons.Filled.Delete,
+                            contentDescription = "Remover"
+                        )
+                    }
+                }
+            }
+        }
+    )
+}
+
+@Composable
+fun DetalhesPessoa(
+    modifier: Modifier,
+    pessoa: Pessoa
+) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+    ) {
+        TituloPessoa(
+            texto = "Código - ${pessoa.id}"
+        )
+        AtributoPessoa(
+            nomeAtributo = "Nome",
+            valorAtributo = pessoa.nome
+        )
+        AtributoPessoa(
+            nomeAtributo = "CPF",
+            valorAtributo = pessoa.cpf.formatarCpf()
+        )
+        AtributoPessoa(
+            nomeAtributo = "Telefone",
+            valorAtributo = pessoa.telefone.formatarTelefone()
+        )
+        Divider(modifier = Modifier.padding(top = 8.dp))
+        TituloPessoa(
+            texto = "Endereço"
+        )
+        AtributoPessoa(
+            nomeAtributo = "CEP",
+            valorAtributo = pessoa.endereco.cep.formatarCep()
+        )
+        AtributoPessoa(
+            nomeAtributo = "Logradouro",
+            valorAtributo = pessoa.endereco.logradouro
+        )
+        AtributoPessoa(
+            nomeAtributo = "Número",
+            valorAtributo = pessoa.endereco.numero.toString()
+        )
+        AtributoPessoa(
+            nomeAtributo = "Complemento",
+            valorAtributo = pessoa.endereco.complemento
+        )
+        AtributoPessoa(
+            nomeAtributo = "Bairro",
+            valorAtributo = pessoa.endereco.bairro
+        )
+        AtributoPessoa(
+            nomeAtributo = "Cidade",
+            valorAtributo = pessoa.endereco.cidade
+        )
+    }
+}
+
+@Composable
+fun TituloPessoa(
+    modifier: Modifier = Modifier,
+    texto: String
+) {
+    Text(
+        text = texto,
+        style = MaterialTheme.typography.titleLarge,
+        color = MaterialTheme.colorScheme.primary,
+        modifier = modifier.padding(16.dp)
+    )
+}
+
+@Composable
+fun AtributoPessoa(
+    modifier: Modifier = Modifier,
+    nomeAtributo: String,
+    valorAtributo: String
+) {
+    Column(
+        modifier = modifier.padding(
+            horizontal = 16.dp,
+            vertical = 8.dp
+        )
+    ) {
+        Text(
+            text = nomeAtributo,
+            style = MaterialTheme.typography.labelLarge.copy(
+                fontWeight = FontWeight.Bold
+            ),
+            color = MaterialTheme.colorScheme.primary
+        )
+        val textStyle: TextStyle
+        val texto: String
+        if (valorAtributo.isNotEmpty()) {
+            texto = valorAtributo
+            textStyle = MaterialTheme.typography.labelLarge
+        } else {
+            texto = "Não informado"
+            textStyle = MaterialTheme.typography.labelSmall.copy(
+                fontStyle = FontStyle.Italic
+            )
+        }
+        Text(
+            text = texto,
+            style = textStyle,
+            color = MaterialTheme.colorScheme.primary
+        )
+    }
+}
