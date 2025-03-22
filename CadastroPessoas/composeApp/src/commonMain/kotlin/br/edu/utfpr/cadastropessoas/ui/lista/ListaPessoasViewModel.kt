@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import br.edu.utfpr.cadastropessoas.data.repository.PessoaRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlin.random.Random
 
 class ListaPessoasViewModel(
     private val pessoaRepository: PessoaRepository
@@ -32,10 +31,6 @@ class ListaPessoasViewModel(
         viewModelScope.launch {
             delay(1500)
             uiState = try {
-                val ocorreuErro = Random.nextBoolean()
-                if (ocorreuErro) {
-                    throw Exception("Erro gerado para teste")
-                }
                 uiState.copy(
                     carregando = false,
                     pessoas = pessoaRepository.listar()

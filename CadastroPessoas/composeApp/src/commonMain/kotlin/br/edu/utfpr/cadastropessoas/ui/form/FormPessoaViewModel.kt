@@ -12,7 +12,6 @@ import br.edu.utfpr.cadastropessoas.data.repository.CepRepository
 import br.edu.utfpr.cadastropessoas.data.repository.PessoaRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlin.random.Random
 
 class FormPessoaViewModel(
     private val idPessoa: Int,
@@ -40,10 +39,6 @@ class FormPessoaViewModel(
         viewModelScope.launch {
             delay(1500)
             uiState = try {
-                val ocorreuErro = Random.nextBoolean()
-                if (ocorreuErro) {
-                    throw Exception("Erro gerado para teste")
-                }
                 val pessoa: Pessoa = pessoaRepository.carregar(idPessoa)
                 uiState.copy(
                     carregando = false,
@@ -94,10 +89,6 @@ class FormPessoaViewModel(
                 )
             )
             uiState = try {
-                val ocorreuErro = Random.nextBoolean()
-                if (ocorreuErro) {
-                    throw Exception("Erro gerado para teste")
-                }
                 pessoaRepository.salvar(pessoa)
                 uiState.copy(
                     salvando = false,
@@ -278,10 +269,6 @@ class FormPessoaViewModel(
         viewModelScope.launch {
             delay(1500)
             uiState = try {
-                val hasError = Random.nextBoolean()
-                if (hasError) {
-                    throw Exception("Erro gerado para teste")
-                }
                 val cepRetornado: Cep = cepRepository.buscarCep(cep)
                 uiState.copy(
                     formState = uiState.formState.copy(
