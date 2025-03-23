@@ -3,6 +3,9 @@ package br.edu.utfpr.cadastropessoas.ui.form
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import cadastropessoas.composeapp.generated.resources.Res
+import cadastropessoas.composeapp.generated.resources.cpf_obrigatorio
+import cadastropessoas.composeapp.generated.resources.telefone_obrigatorio
 
 @Preview(showBackground = true)
 @Composable
@@ -59,11 +62,11 @@ private fun FormPessoaExistenteFormularioPreview() {
             formState = FormState(
                 nome = FormField(value = "João"),
                 cpf = FormField(
-                    errorMessage = "CPF obrigatório"
+                    errorStringResource = Res.string.cpf_obrigatorio
                 ),
                 telefone = FormField(
-                    value = "(99) 9999-99",
-                    errorMessage = "Telefone inválido"
+                    value = "99999999",
+                    errorStringResource = Res.string.telefone_obrigatorio
                 )
             ),
             onNomeAlterado = {},

@@ -28,6 +28,16 @@ import br.edu.utfpr.cadastropessoas.data.model.Pessoa
 import br.edu.utfpr.cadastropessoas.ui.composables.AppBarPadrao
 import br.edu.utfpr.cadastropessoas.ui.composables.Carregando
 import br.edu.utfpr.cadastropessoas.ui.composables.ErroCarregar
+import cadastropessoas.composeapp.generated.resources.Res
+import cadastropessoas.composeapp.generated.resources.adicionar
+import cadastropessoas.composeapp.generated.resources.adicione_alguma_pessoa
+import cadastropessoas.composeapp.generated.resources.atualizar
+import cadastropessoas.composeapp.generated.resources.carregando_pessoas
+import cadastropessoas.composeapp.generated.resources.erro_ao_carregar_pessoas
+import cadastropessoas.composeapp.generated.resources.nenhuma_pessoa_encontrada
+import cadastropessoas.composeapp.generated.resources.pessoas
+import cadastropessoas.composeapp.generated.resources.selecionar
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -48,19 +58,22 @@ fun ListaPessoasScreen(
         },
         floatingActionButton = {
             FloatingActionButton(onClick = onAdicionarPessoa) {
-                Icon(Icons.Default.Add, contentDescription = "Adicionar")
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = stringResource(Res.string.adicionar)
+                )
             }
         }
     ) { innerPadding ->
         if (viewModel.uiState.carregando) {
             Carregando(
                 modifier = Modifier.padding(innerPadding),
-                texto = "Carregando Pessoas..."
+                texto = "${stringResource(Res.string.carregando_pessoas)}..."
             )
         } else if (viewModel.uiState.ocorreuErro) {
             ErroCarregar(
                 modifier = Modifier.padding(innerPadding),
-                texto = "Não foi possível carregar as pessoas",
+                texto = stringResource(Res.string.erro_ao_carregar_pessoas),
                 onTentarNovamente = viewModel::carregarPessoas
             )
         } else {
@@ -81,13 +94,13 @@ fun ListaPessoasTopBar(
 ) {
     AppBarPadrao(
         modifier = modifier,
-        titulo = "Pessoas",
+        titulo = stringResource(Res.string.pessoas),
         actions = {
             if (mostrarAcaoAtualizar) {
                 IconButton(onClick = onAtualizar) {
                     Icon(
                         imageVector = Icons.Filled.Refresh,
-                        contentDescription = "Atualizar"
+                        contentDescription = stringResource(Res.string.atualizar)
                     )
                 }
             }
@@ -130,13 +143,13 @@ fun ListaVazia(modifier: Modifier = Modifier) {
         modifier = modifier.fillMaxSize()
     ) {
         Text(
-            text = "Nenhuma pessoa encontrada",
+            text = stringResource(Res.string.nenhuma_pessoa_encontrada),
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.primary
         )
         Text(
             modifier = Modifier.padding(top = 8.dp),
-            text = "Adicione alguma presionando o \"+\"",
+            text = stringResource(Res.string.adicione_alguma_pessoa),
             style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.primary
         )
@@ -163,7 +176,7 @@ fun ItemListaPessoas(
         trailingContent = {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                contentDescription = "Selecionar"
+                contentDescription = stringResource(Res.string.selecionar)
             )
         }
     )

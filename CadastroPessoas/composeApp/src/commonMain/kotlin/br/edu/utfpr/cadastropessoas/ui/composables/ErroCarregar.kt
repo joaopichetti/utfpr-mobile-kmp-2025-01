@@ -15,6 +15,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import cadastropessoas.composeapp.generated.resources.Res
+import cadastropessoas.composeapp.generated.resources.aguarde_um_momento_e_tente_novamente
+import cadastropessoas.composeapp.generated.resources.erro_ao_carregar
+import cadastropessoas.composeapp.generated.resources.tentar_novamente
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ErroCarregar(
@@ -29,7 +34,7 @@ fun ErroCarregar(
     ) {
         Icon(
             imageVector = Icons.Filled.Close,
-            contentDescription = "Erro ao carregar",
+            contentDescription = stringResource(Res.string.erro_ao_carregar),
             tint = MaterialTheme.colorScheme.primary,
             modifier = Modifier.size(80.dp)
         )
@@ -41,7 +46,7 @@ fun ErroCarregar(
         )
         Text(
             modifier = Modifier.padding(top = 8.dp, start = 8.dp, end = 8.dp),
-            text = "Aguarde um momento e tente novamente",
+            text = stringResource(Res.string.aguarde_um_momento_e_tente_novamente),
             style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.primary
         )
@@ -49,7 +54,7 @@ fun ErroCarregar(
             onClick = onTentarNovamente,
             modifier = Modifier.padding(top = 16.dp)
         ) {
-            Text(text = "Tentar novamente")
+            Text(text = stringResource(Res.string.tentar_novamente))
         }
     }
 }

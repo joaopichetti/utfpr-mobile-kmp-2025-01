@@ -40,6 +40,29 @@ import br.edu.utfpr.cadastropessoas.ui.composables.ErroCarregar
 import br.edu.utfpr.cadastropessoas.ui.form.visualtransformation.CepVisualTransformation
 import br.edu.utfpr.cadastropessoas.ui.form.visualtransformation.CpfVisualTransformation
 import br.edu.utfpr.cadastropessoas.ui.form.visualtransformation.TelefoneVisualTransformation
+import cadastropessoas.composeapp.generated.resources.Res
+import cadastropessoas.composeapp.generated.resources.a_definir
+import cadastropessoas.composeapp.generated.resources.bairro
+import cadastropessoas.composeapp.generated.resources.carregando_pessoa
+import cadastropessoas.composeapp.generated.resources.cep
+import cadastropessoas.composeapp.generated.resources.cidade
+import cadastropessoas.composeapp.generated.resources.codigo
+import cadastropessoas.composeapp.generated.resources.complemento
+import cadastropessoas.composeapp.generated.resources.cpf
+import cadastropessoas.composeapp.generated.resources.editar_pessoa
+import cadastropessoas.composeapp.generated.resources.endereco
+import cadastropessoas.composeapp.generated.resources.erro_ao_carregar_pessoa
+import cadastropessoas.composeapp.generated.resources.erro_ao_salvar_pessoa
+import cadastropessoas.composeapp.generated.resources.logradouro
+import cadastropessoas.composeapp.generated.resources.nome
+import cadastropessoas.composeapp.generated.resources.nova_pessoa
+import cadastropessoas.composeapp.generated.resources.numero
+import cadastropessoas.composeapp.generated.resources.salvar
+import cadastropessoas.composeapp.generated.resources.telefone
+import cadastropessoas.composeapp.generated.resources.voltar
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.getString
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -59,8 +82,7 @@ fun FormPessoaScreen(
     LaunchedEffect(snackbarHostState, viewModel.uiState.ocorreuErroAoSalvar) {
         if (viewModel.uiState.ocorreuErroAoSalvar) {
             snackbarHostState.showSnackbar(
-                message = "Ocorreu um problema ao salvar a pessoa." +
-                        " Aguarde um momento e tente noamente."
+                message = getString(Res.string.erro_ao_salvar_pessoa)
             )
         }
     }
@@ -82,12 +104,12 @@ fun FormPessoaScreen(
         if (viewModel.uiState.carregando) {
             Carregando(
                 modifier = Modifier.padding(innerPadding),
-                texto = "Carregando pessoa..."
+                texto = "${stringResource(Res.string.carregando_pessoa)}..."
             )
         } else if (viewModel.uiState.ocorreuErroAoCarregar) {
             ErroCarregar(
                 modifier = Modifier.padding(innerPadding),
-                texto = "Não foi possível carregar a pessoa",
+                texto = stringResource(Res.string.erro_ao_carregar_pessoa),
                 onTentarNovamente = viewModel::carregarPessoa
             )
         } else {
@@ -118,15 +140,15 @@ fun FormPessoaTopBar(
     AppBarPadrao(
         modifier = modifier,
         titulo = if (novaPessoa) {
-            "Nova Pessoa"
+            stringResource(Res.string.nova_pessoa)
         } else {
-            "Editar Pessoa"
+            stringResource(Res.string.editar_pessoa)
         },
         navigationIcon = {
             IconButton(onClick = onVoltar) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Voltar"
+                    contentDescription = stringResource(Res.string.voltar)
                 )
             }
         },
@@ -143,7 +165,7 @@ fun FormPessoaTopBar(
                     IconButton(onClick = onSalvar) {
                         Icon(
                             imageVector = Icons.Filled.Check,
-                            contentDescription = "Salvar"
+                            contentDescription = stringResource(Res.string.salvar)
                         )
                     }
                 }
@@ -172,35 +194,35 @@ fun Formulario(
    ) {
        IdPessoa(idPessoa = idPessoa)
        FormTextField(
-           label = "Nome",
+           label = stringResource(Res.string.nome),
            value = formState.nome.value,
            onValueChanged = onNomeAlterado,
-           errorMessage = formState.nome.errorMessage,
+           errorStringResource = formState.nome.errorStringResource,
            keyboardCapitalization = KeyboardCapitalization.Words
        )
        FormTextField(
-           label = "CPF",
+           label = stringResource(Res.string.cpf),
            value = formState.cpf.value,
            onValueChanged = onCpfAlterado,
-           errorMessage = formState.cpf.errorMessage,
+           errorStringResource = formState.cpf.errorStringResource,
            keyboardType = KeyboardType.Number,
            visualTransformation = CpfVisualTransformation()
        )
        FormTextField(
-           label = "Telefone",
+           label = stringResource(Res.string.telefone),
            value = formState.telefone.value,
            onValueChanged = onTelefoneAlterado,
-           errorMessage = formState.telefone.errorMessage,
+           errorStringResource = formState.telefone.errorStringResource,
            keyboardType = KeyboardType.Phone,
            visualTransformation = TelefoneVisualTransformation()
        )
        Divider(modifier = Modifier.padding(vertical = 16.dp))
-       FormTitle(text = "Endereço")
+       FormTitle(text = stringResource(Res.string.endereco))
        FormTextField(
-           label = "CEP",
+           label = stringResource(Res.string.cep),
            value = formState.cep.value,
            onValueChanged = onCepAlterado,
-           errorMessage = formState.cep.errorMessage,
+           errorStringResource = formState.cep.errorStringResource,
            keyboardType = KeyboardType.Number,
            visualTransformation = CepVisualTransformation(),
            enabled = !formState.buscandoCep,
@@ -216,31 +238,31 @@ fun Formulario(
            }
        )
        FormTextField(
-           label = "Logradouro",
+           label = stringResource(Res.string.logradouro),
            value = formState.logradouro.value,
            enabled = false,
            onValueChanged = {}
        )
        FormTextField(
-           label = "Número",
+           label = stringResource(Res.string.numero),
            value = formState.numero.value,
            onValueChanged = onNumeroAlterado,
-           errorMessage = formState.numero.errorMessage,
+           errorStringResource = formState.numero.errorStringResource,
            keyboardType = KeyboardType.Number
        )
        FormTextField(
-           label = "Complemento",
+           label = stringResource(Res.string.complemento),
            value = formState.complemento.value,
            onValueChanged = onComplementoAlterado
        )
        FormTextField(
-           label = "Bairro",
+           label = stringResource(Res.string.bairro),
            value = formState.bairro.value,
            enabled = false,
            onValueChanged = {}
        )
        FormTextField(
-           label = "Cidade",
+           label = stringResource(Res.string.cidade),
            value = formState.cidade.value,
            enabled = false,
            onValueChanged = {},
@@ -256,7 +278,7 @@ fun IdPessoa(
 ) {
     if (idPessoa > 0) {
         FormTitle(
-            text = "Código - $idPessoa"
+            text = "${stringResource(Res.string.codigo)} - $idPessoa"
         )
     } else {
         Row(
@@ -264,10 +286,10 @@ fun IdPessoa(
             verticalAlignment = Alignment.CenterVertically
         ) {
             FormTitle(
-                text = "Código - "
+                text = "${stringResource(Res.string.codigo)} - "
             )
             Text(
-                text = "a definir",
+                text = stringResource(Res.string.a_definir),
                 color = MaterialTheme.colorScheme.primaryContainer,
                 style = MaterialTheme.typography.titleSmall,
                 fontStyle = FontStyle.Italic
@@ -296,7 +318,7 @@ fun FormTextField(
     value: String,
     onValueChanged: (String) -> Unit,
     enabled: Boolean = true,
-    errorMessage: String? = null,
+    errorStringResource: StringResource? = null,
     keyboardCapitalization: KeyboardCapitalization = KeyboardCapitalization.Sentences,
     keyboardImeAction: ImeAction = ImeAction.Next,
     keyboardType: KeyboardType = KeyboardType.Text,
@@ -312,7 +334,7 @@ fun FormTextField(
         label = { Text(label) },
         maxLines = 1,
         enabled = enabled,
-        isError = errorMessage?.isNotEmpty() == true,
+        isError = errorStringResource != null,
         trailingIcon = trailingIcon,
         keyboardOptions = KeyboardOptions(
             capitalization = keyboardCapitalization,
@@ -321,9 +343,9 @@ fun FormTextField(
         ),
         visualTransformation = visualTransformation
     )
-    errorMessage?.let {
+    errorStringResource?.let {
         Text(
-            text = errorMessage,
+            text = stringResource(errorStringResource),
             color = MaterialTheme.colorScheme.error,
             style = MaterialTheme.typography.labelSmall,
             modifier = Modifier.padding(horizontal = 16.dp)

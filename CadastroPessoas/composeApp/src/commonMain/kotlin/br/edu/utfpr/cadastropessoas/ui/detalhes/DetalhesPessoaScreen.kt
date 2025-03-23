@@ -38,6 +38,32 @@ import br.edu.utfpr.cadastropessoas.ui.composables.ErroCarregar
 import br.edu.utfpr.cadastropessoas.utils.extensions.formatarCep
 import br.edu.utfpr.cadastropessoas.utils.extensions.formatarCpf
 import br.edu.utfpr.cadastropessoas.utils.extensions.formatarTelefone
+import cadastropessoas.composeapp.generated.resources.Res
+import cadastropessoas.composeapp.generated.resources.alterar
+import cadastropessoas.composeapp.generated.resources.atencao
+import cadastropessoas.composeapp.generated.resources.bairro
+import cadastropessoas.composeapp.generated.resources.cancelar
+import cadastropessoas.composeapp.generated.resources.carregando_pessoa
+import cadastropessoas.composeapp.generated.resources.cep
+import cadastropessoas.composeapp.generated.resources.cidade
+import cadastropessoas.composeapp.generated.resources.codigo
+import cadastropessoas.composeapp.generated.resources.complemento
+import cadastropessoas.composeapp.generated.resources.confirmar
+import cadastropessoas.composeapp.generated.resources.confirmar_remover_pessoa
+import cadastropessoas.composeapp.generated.resources.cpf
+import cadastropessoas.composeapp.generated.resources.detalhes_da_pessoa
+import cadastropessoas.composeapp.generated.resources.endereco
+import cadastropessoas.composeapp.generated.resources.erro_ao_carregar_pessoa
+import cadastropessoas.composeapp.generated.resources.erro_ao_remover_pessoa
+import cadastropessoas.composeapp.generated.resources.logradouro
+import cadastropessoas.composeapp.generated.resources.nao_informado
+import cadastropessoas.composeapp.generated.resources.nome
+import cadastropessoas.composeapp.generated.resources.numero
+import cadastropessoas.composeapp.generated.resources.remover
+import cadastropessoas.composeapp.generated.resources.telefone
+import cadastropessoas.composeapp.generated.resources.voltar
+import org.jetbrains.compose.resources.getString
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -59,8 +85,7 @@ fun DetalhesPessoaScreen(
     LaunchedEffect(snackbarHostState, viewModel.uiState.ocorreuErroAoRemover) {
         if (viewModel.uiState.ocorreuErroAoRemover) {
             snackbarHostState.showSnackbar(
-                message = "Não foi possível remover a pessoa." +
-                        " Aguarde um momento e tente novamente."
+                message = getString(Res.string.erro_ao_remover_pessoa)
             )
         }
     }
@@ -88,12 +113,12 @@ fun DetalhesPessoaScreen(
         if (viewModel.uiState.carregando) {
             Carregando(
                 modifier = Modifier.padding(innerPadding),
-                texto = "Carregando pessoa..."
+                texto = "${stringResource(Res.string.carregando_pessoa)}..."
             )
         } else if (viewModel.uiState.ocorreuErroAoCarregar) {
             ErroCarregar(
                 modifier = Modifier.padding(innerPadding),
-                texto = "Não foi possível carregar a pessoa",
+                texto = stringResource(Res.string.erro_ao_carregar_pessoa),
                 onTentarNovamente = viewModel::carregarPessoa
             )
         } else {
@@ -113,19 +138,19 @@ fun DialogConfirmacao(
 ) {
     AlertDialog(
         modifier = modifier,
-        title = { Text("Atenção") },
+        title = { Text(stringResource(Res.string.atencao)) },
         text = {
-            Text("Ao confirmar, essa pessoa será removida e não poderá ser recuperada")
+            Text(stringResource(Res.string.confirmar_remover_pessoa))
         },
         onDismissRequest = onCancelar,
         confirmButton = {
             TextButton(onClick = onConfirmar) {
-                Text("Confirmar")
+                Text(stringResource(Res.string.confirmar))
             }
         },
         dismissButton = {
             TextButton(onClick = onCancelar) {
-                Text("Cancelar")
+                Text(stringResource(Res.string.cancelar))
             }
         }
     )
@@ -142,12 +167,12 @@ fun DetalhesPessoaTopBar(
 ) {
     AppBarPadrao(
         modifier = modifier.fillMaxWidth(),
-        titulo = "Detalhes da Pessoa",
+        titulo = stringResource(Res.string.detalhes_da_pessoa),
         navigationIcon = {
             IconButton(onClick = onVoltar) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Voltar"
+                    contentDescription = stringResource(Res.string.voltar)
                 )
             }
         },
@@ -164,13 +189,13 @@ fun DetalhesPessoaTopBar(
                     IconButton(onClick = onAlterar) {
                         Icon(
                             imageVector = Icons.Filled.Edit,
-                            contentDescription = "Alterar"
+                            contentDescription = stringResource(Res.string.alterar)
                         )
                     }
                     IconButton(onClick = onRemover) {
                         Icon(
                             imageVector = Icons.Filled.Delete,
-                            contentDescription = "Remover"
+                            contentDescription = stringResource(Res.string.remover)
                         )
                     }
                 }
@@ -190,46 +215,46 @@ fun DetalhesPessoa(
             .verticalScroll(rememberScrollState())
     ) {
         TituloPessoa(
-            texto = "Código - ${pessoa.id}"
+            texto = "${stringResource(Res.string.codigo)} - ${pessoa.id}"
         )
         AtributoPessoa(
-            nomeAtributo = "Nome",
+            nomeAtributo = stringResource(Res.string.nome),
             valorAtributo = pessoa.nome
         )
         AtributoPessoa(
-            nomeAtributo = "CPF",
+            nomeAtributo = stringResource(Res.string.cpf),
             valorAtributo = pessoa.cpf.formatarCpf()
         )
         AtributoPessoa(
-            nomeAtributo = "Telefone",
+            nomeAtributo = stringResource(Res.string.telefone),
             valorAtributo = pessoa.telefone.formatarTelefone()
         )
         Divider(modifier = Modifier.padding(top = 8.dp))
         TituloPessoa(
-            texto = "Endereço"
+            texto = stringResource(Res.string.endereco)
         )
         AtributoPessoa(
-            nomeAtributo = "CEP",
+            nomeAtributo = stringResource(Res.string.cep),
             valorAtributo = pessoa.endereco.cep.formatarCep()
         )
         AtributoPessoa(
-            nomeAtributo = "Logradouro",
+            nomeAtributo = stringResource(Res.string.logradouro),
             valorAtributo = pessoa.endereco.logradouro
         )
         AtributoPessoa(
-            nomeAtributo = "Número",
+            nomeAtributo = stringResource(Res.string.numero),
             valorAtributo = pessoa.endereco.numero.toString()
         )
         AtributoPessoa(
-            nomeAtributo = "Complemento",
+            nomeAtributo = stringResource(Res.string.complemento),
             valorAtributo = pessoa.endereco.complemento
         )
         AtributoPessoa(
-            nomeAtributo = "Bairro",
+            nomeAtributo = stringResource(Res.string.bairro),
             valorAtributo = pessoa.endereco.bairro
         )
         AtributoPessoa(
-            nomeAtributo = "Cidade",
+            nomeAtributo = stringResource(Res.string.cidade),
             valorAtributo = pessoa.endereco.cidade
         )
     }
@@ -273,7 +298,7 @@ fun AtributoPessoa(
             texto = valorAtributo
             textStyle = MaterialTheme.typography.labelLarge
         } else {
-            texto = "Não informado"
+            texto = stringResource(Res.string.nao_informado)
             textStyle = MaterialTheme.typography.labelSmall.copy(
                 fontStyle = FontStyle.Italic
             )

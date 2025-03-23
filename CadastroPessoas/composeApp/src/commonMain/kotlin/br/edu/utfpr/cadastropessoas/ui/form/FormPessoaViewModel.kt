@@ -11,8 +11,19 @@ import br.edu.utfpr.cadastropessoas.data.model.Endereco
 import br.edu.utfpr.cadastropessoas.data.model.Pessoa
 import br.edu.utfpr.cadastropessoas.data.repository.CepRepository
 import br.edu.utfpr.cadastropessoas.data.repository.PessoaRepository
+import cadastropessoas.composeapp.generated.resources.Res
+import cadastropessoas.composeapp.generated.resources.cep_invalido
+import cadastropessoas.composeapp.generated.resources.cep_obrigatorio
+import cadastropessoas.composeapp.generated.resources.cpf_invalido
+import cadastropessoas.composeapp.generated.resources.cpf_obrigatorio
+import cadastropessoas.composeapp.generated.resources.erro_ao_carregar_cep
+import cadastropessoas.composeapp.generated.resources.nome_obrigatorio
+import cadastropessoas.composeapp.generated.resources.numero_obrigatorio
+import cadastropessoas.composeapp.generated.resources.telefone_invalido
+import cadastropessoas.composeapp.generated.resources.telefone_obrigatorio
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.StringResource
 
 class FormPessoaViewModel(
     private val pessoaRepository: PessoaRepository,
@@ -113,7 +124,7 @@ class FormPessoaViewModel(
                 formState = uiState.formState.copy(
                     nome = FormField(
                         value = novoNome,
-                        errorMessage = validarNome(novoNome)
+                        errorStringResource = validarNome(novoNome)
                     )
                 )
             )
@@ -127,7 +138,7 @@ class FormPessoaViewModel(
                 formState = uiState.formState.copy(
                     cpf = FormField(
                         value = novoCpf,
-                        errorMessage = validarCpf(novoCpf)
+                        errorStringResource = validarCpf(novoCpf)
                     )
                 )
             )
@@ -141,7 +152,7 @@ class FormPessoaViewModel(
                 formState = uiState.formState.copy(
                     telefone = FormField(
                         value = novoTelefone,
-                        errorMessage = validarTelefone(novoTelefone)
+                        errorStringResource = validarTelefone(novoTelefone)
                     )
                 )
             )
@@ -160,7 +171,7 @@ class FormPessoaViewModel(
                     formState = uiState.formState.copy(
                         cep = FormField(
                             value = novoCep,
-                            errorMessage = mensagemValidacao
+                            errorStringResource = mensagemValidacao
                         )
                     )
                 )
@@ -175,7 +186,7 @@ class FormPessoaViewModel(
                 formState = uiState.formState.copy(
                     numero = FormField(
                         value = novoNumero,
-                        errorMessage = validarNumero(novoNumero)
+                        errorStringResource = validarNumero(novoNumero)
                     )
                 )
             )
@@ -194,38 +205,38 @@ class FormPessoaViewModel(
         }
     }
 
-    private fun validarNome(nome: String): String? = if (nome.isBlank()) {
-        "O nome é obrigatório"
+    private fun validarNome(nome: String): StringResource? = if (nome.isBlank()) {
+        Res.string.nome_obrigatorio
     } else {
         null
     }
 
-    private fun validarCpf(cpf: String): String? = if (cpf.isBlank()) {
-        "O CPF é obrigatório"
+    private fun validarCpf(cpf: String): StringResource? = if (cpf.isBlank()) {
+        Res.string.cpf_obrigatorio
     } else if (cpf.length != 11) {
-        "Informe um CPF válido"
+        Res.string.cpf_invalido
     } else {
         null
     }
 
-    private fun validarTelefone(telefone: String): String? = if (telefone.isBlank()) {
-        "O telefone é obrigatório"
+    private fun validarTelefone(telefone: String): StringResource? = if (telefone.isBlank()) {
+        Res.string.telefone_obrigatorio
     } else if (telefone.length < 10 || telefone.length > 11) {
-        "Informe um telefone válido"
+        Res.string.telefone_invalido
     } else {
         null
     }
 
-    private fun validarCep(cep: String): String? = if (cep.isBlank()) {
-        "O CEP é obrigatório"
+    private fun validarCep(cep: String): StringResource? = if (cep.isBlank()) {
+        Res.string.cep_obrigatorio
     } else if (cep.length != 8) {
-        "Informe um CEP válido"
+        Res.string.cep_invalido
     } else {
         null
     }
 
-    private fun validarNumero(numero: String): String? = if (numero.isBlank()) {
-        "O número é obrigatório"
+    private fun validarNumero(numero: String): StringResource? = if (numero.isBlank()) {
+        Res.string.numero_obrigatorio
     } else {
         null
     }
@@ -234,19 +245,19 @@ class FormPessoaViewModel(
         uiState = uiState.copy(
             formState = uiState.formState.copy(
                 nome = uiState.formState.nome.copy(
-                    errorMessage = validarNome(uiState.formState.nome.value)
+                    errorStringResource = validarNome(uiState.formState.nome.value)
                 ),
                 cpf = uiState.formState.cpf.copy(
-                    errorMessage = validarCpf(uiState.formState.cpf.value)
+                    errorStringResource = validarCpf(uiState.formState.cpf.value)
                 ),
                 telefone = uiState.formState.telefone.copy(
-                    errorMessage = validarTelefone(uiState.formState.telefone.value)
+                    errorStringResource = validarTelefone(uiState.formState.telefone.value)
                 ),
                 cep = uiState.formState.cep.copy(
-                    errorMessage = validarCep(uiState.formState.cep.value)
+                    errorStringResource = validarCep(uiState.formState.cep.value)
                 ),
                 numero = uiState.formState.numero.copy(
-                    errorMessage = validarNumero(uiState.formState.numero.value)
+                    errorStringResource = validarNumero(uiState.formState.numero.value)
                 )
             )
         )
@@ -261,7 +272,7 @@ class FormPessoaViewModel(
                 buscandoCep = true,
                 cep = FormField(
                     value = cep,
-                    errorMessage = null
+                    errorStringResource = null
                 ),
                 logradouro = FormField(""),
                 bairro = FormField(""),
@@ -287,8 +298,7 @@ class FormPessoaViewModel(
                     formState = uiState.formState.copy(
                         buscandoCep = false,
                         cep = uiState.formState.cep.copy(
-                            errorMessage = "Não foi possível consultar o CEP." +
-                                    " Aguarde um momento e tente novamente."
+                            errorStringResource = Res.string.erro_ao_carregar_cep
                         )
                     )
                 )

@@ -1,8 +1,10 @@
 package br.edu.utfpr.cadastropessoas.ui.form
 
+import org.jetbrains.compose.resources.StringResource
+
 data class FormField(
     val value: String = "",
-    val errorMessage: String? = null
+    val errorStringResource: StringResource? = null
 )
 
 data class FormState(
@@ -17,15 +19,15 @@ data class FormState(
     val cidade: FormField = FormField(),
     val buscandoCep: Boolean = false
 ) {
-    val isValid get(): Boolean = nome.errorMessage == null &&
-            cpf.errorMessage == null &&
-            telefone.errorMessage == null &&
-            cep.errorMessage == null &&
-            logradouro.errorMessage == null &&
-            numero.errorMessage == null &&
-            complemento.errorMessage == null &&
-            bairro.errorMessage == null &&
-            cidade.errorMessage == null
+    val isValid get(): Boolean = nome.errorStringResource == null &&
+            cpf.errorStringResource == null &&
+            telefone.errorStringResource == null &&
+            cep.errorStringResource == null &&
+            logradouro.errorStringResource == null &&
+            numero.errorStringResource == null &&
+            complemento.errorStringResource == null &&
+            bairro.errorStringResource == null &&
+            cidade.errorStringResource == null
 }
 
 data class FormPessoaUiState(
